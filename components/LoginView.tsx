@@ -15,7 +15,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!username || !password) {
-            setError('ERROR: CREDENTIALS_REQUIRED');
+            setError('ERROR: CREDENCIALES_REQUERIDAS');
             return;
         }
 
@@ -35,10 +35,10 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
             // Use display name or email, fallback to 'User'
-            onLogin(user.displayName || user.email || 'User');
+            onLogin(user.displayName || user.email || 'Usuario');
         } catch (err: any) {
             console.error("Google Sign-In Error:", err);
-            setError('ERROR: GOOGLE_AUTH_FAILED');
+            setError('ERROR: FALLO_AUTH_GOOGLE');
             setLoading(false);
         }
     };
@@ -58,14 +58,14 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                     <div className="h-0.5 w-full bg-green-900/30 relative">
                         <div className="absolute top-0 left-0 h-full bg-green-500 animate-[loading_2s_infinite]"></div>
                     </div>
-                    <p className="text-[10px] text-green-700 uppercase tracking-[0.3em]">Secure Terminal Access v4.0</p>
+                    <p className="text-[10px] text-green-700 uppercase tracking-[0.3em]">Acceso Seguro Terminal v4.0</p>
                 </div>
 
                 <div className="space-y-6 bg-black/40 border border-green-900/30 p-6 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.05)]">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-[10px] text-green-600 font-bold uppercase tracking-wider block">login_user:</label>
+                                <label className="text-[10px] text-green-600 font-bold uppercase tracking-wider block">usuario_login:</label>
                                 <div className="flex items-center space-x-2 border-b border-green-900/50 pb-1 group focus-within:border-green-500 transition-colors">
                                     <span className="text-green-500 text-sm opacity-50">@</span>
                                     <input
@@ -73,14 +73,14 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
                                         className="bg-transparent border-none outline-none text-sm w-full text-white placeholder-green-900"
-                                        placeholder="username"
+                                        placeholder="usuario"
                                         autoFocus
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] text-green-600 font-bold uppercase tracking-wider block">access_token:</label>
+                                <label className="text-[10px] text-green-600 font-bold uppercase tracking-wider block">token_acceso:</label>
                                 <div className="flex items-center space-x-2 border-b border-green-900/50 pb-1 group focus-within:border-green-500 transition-colors">
                                     <span className="text-green-500 text-sm opacity-50">#</span>
                                     <input
@@ -107,7 +107,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                                 : 'bg-green-600 hover:bg-green-500 text-black shadow-[0_4px_0_rgba(22,101,52,1)] active:translate-y-1 active:shadow-none'
                                 }`}
                         >
-                            {loading ? 'Booting Kernel...' : 'Initialize Session'}
+                            {loading ? 'Iniciando Kernel...' : 'Iniciar sesión'}
                         </button>
                     </form>
 
@@ -116,7 +116,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                             <span className="w-full border-t border-green-900/30" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-[#0c0c0c] px-2 text-green-900/50 text-[10px]">Or continue with</span>
+                            <span className="bg-[#0c0c0c] px-2 text-green-900/50 text-[10px]">O continuar con</span>
                         </div>
                     </div>
 
@@ -126,12 +126,12 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         disabled={loading}
                         className="w-full py-3 rounded text-[11px] font-black uppercase tracking-widest transition-all border border-green-700 text-green-500 hover:bg-green-900/20 active:translate-y-1"
                     >
-                        Google Access (SSO)
+                        Registrar cuenta
                     </button>
                 </div>
 
                 <div className="text-center opacity-30 text-[8px] uppercase tracking-tighter text-gray-500">
-                    SYSTEM_ID: 0x{Math.random().toString(16).substr(2, 8).toUpperCase()} | KERNEL_STATUS: OPTIMIZED
+                    ID_SISTEMA: 0x{Math.random().toString(16).substr(2, 8).toUpperCase()} | ESTADO_KERNEL: OPTIMIZADO
                 </div>
             </div>
 
