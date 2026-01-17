@@ -1,0 +1,5 @@
+{
+  "name": "Linux Master: CLI Avanzado",
+  "description": "Una aplicación avanzada de aprendizaje de terminal para dominar comandos de Linux como grep, sed y chmod con vidas gamificadas y validación local.",
+  "requestFramePermissions": []
+}
