@@ -43,4 +43,4 @@ export interface UserState {
   username?: string;
 }
 
-export type View = 'home' | 'section-levels' | 'level-menu' | 'theory' | 'dictionary' | 'mission' | 'success';
+export type View = 'login' | 'home' | 'section-levels' | 'level-menu' | 'theory' | 'dictionary' | 'mission' | 'success';

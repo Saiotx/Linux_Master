@@ -14,9 +14,9 @@ const Header: React.FC<HeaderProps> = ({ onLogout, username }) => {
           <span className="text-green-500 font-bold tracking-tighter text-xl">LINUX_MASTER</span>
           <span className="text-[10px] bg-green-900/40 text-green-400 px-2 py-0.5 rounded border border-green-800/50 uppercase font-bold">Terminal</span>
         </div>
-
+        
         {onLogout && (
-          <button
+          <button 
             onClick={onLogout}
             className="text-[9px] text-gray-500 hover:text-red-500 border border-gray-800 px-2 py-1 rounded transition-colors uppercase font-bold"
           >
