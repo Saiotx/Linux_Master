@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@layer base {
+    body {
+        background-color: #0c0c0c;
+        color: white;
+        font-family: 'JetBrains Mono', monospace;
+        overflow-x: hidden;
+        margin: 0;
+    }
+}
+
+@layer utilities {
+    .terminal-cursor {
+        display: inline-block;
+        width: 10px;
+        height: 20px;
+        background-color: #00ff00;
+        animation: blink 1s step-end infinite;
+        vertical-align: middle;
+        margin-left: 4px;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+@keyframes blink {
+
+    from,
+    to {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
