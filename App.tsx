@@ -10,8 +10,9 @@ import DictionaryView from './components/DictionaryView';
 import ExerciseView from './components/ExerciseView';
 import SuccessView from './components/SuccessView';
 import AdBanner from './components/AdBanner';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const App: React.FC = () => {
   const [userState, setUserState] = useState<UserState>(() => {
@@ -29,26 +30,58 @@ const App: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false); // To avoid saving while fetching
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in.
         const username = user.displayName || user.email || 'User';
-        setUserState(prev => {
-          if (prev.isLoggedIn && prev.username === username) return prev;
-          return {
+        const uid = user.uid;
+
+        setIsSyncing(true);
+        // Fetch data from Firestore
+        const userDocRef = doc(db, 'users', uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          // Cloud data exists, load it
+          const cloudData = userDocSnap.data() as Partial<UserState>;
+          // Ensure we merge with defaults in case of new fields, but prefer cloud data
+          setUserState(prev => ({
             ...prev,
+            ...cloudData,
+            // Admin override
+            unlockedLevel: user.email === 'saioagartzia@gmail.com' ? 40 : (cloudData.unlockedLevel || prev.unlockedLevel),
+            unlockedSection: user.email === 'saioagartzia@gmail.com' ? 4 : (cloudData.unlockedSection || prev.unlockedSection),
             isLoggedIn: true,
             username: username
-          };
-        });
+          }));
+        } else {
+          // No cloud data, upload local data (preserving existing progress)
+          // We use current 'userState' but we need to be careful about closure freshness if we used 'userState' directly.
+          // However, here we can just use the setter with prev or assume local storage was initial source.
+          // Better: merge current local state with login info and save.
+
+          setUserState(prev => {
+            // Admin override also here just in case fresh cloud start
+            const isAdmin = user.email === 'saioagartzia@gmail.com';
+            const newState = {
+              ...prev,
+              unlockedLevel: isAdmin ? 40 : prev.unlockedLevel,
+              unlockedSection: isAdmin ? 4 : prev.unlockedSection,
+              isLoggedIn: true,
+              username: username
+            };
+            // Fire and forget upload for initial sync
+            setDoc(userDocRef, newState);
+            return newState;
+          });
+        }
+        setIsSyncing(false);
         setCurrentView(prev => prev === 'login' ? 'home' : prev);
       } else {
         // User is signed out.
-        // Optional: Only redirect to login if we interpret this as a forced logout
-        // or if we shouldn't be in the app.
-        // For now, if we are not logged in, we go to login.
         setUserState(prev => {
           if (!prev.isLoggedIn) return prev;
           return {
@@ -63,9 +96,20 @@ const App: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  // Save to LocalStorage and Firestore
   useEffect(() => {
+    // Save to local storage
     localStorage.setItem('linux_master_pro', JSON.stringify(userState));
-  }, [userState]);
+
+    // Save to Firestore if logged in and not currently syncing (fetching)
+    if (userState.isLoggedIn && auth.currentUser && !isSyncing) {
+      const uid = auth.currentUser.uid;
+      const userDocRef = doc(db, 'users', uid);
+      // Debounce could be good here but for simplicity/robustness we save on state change.
+      // Given the low frequency of significant state updates (completing levels/missions), direct save is fine.
+      setDoc(userDocRef, userState).catch(err => console.error("Error saving to cloud", err));
+    }
+  }, [userState, isSyncing]);
 
   const handleLogin = (username: string) => {
     setUserState(prev => ({

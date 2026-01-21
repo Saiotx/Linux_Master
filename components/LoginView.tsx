@@ -126,7 +126,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         disabled={loading}
                         className="w-full py-3 rounded text-[11px] font-black uppercase tracking-widest transition-all border border-green-700 text-green-500 hover:bg-green-900/20 active:translate-y-1"
                     >
-                        Registrar cuenta
+                        Acceder con Google
                     </button>
                 </div>
 
