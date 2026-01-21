@@ -29,8 +29,8 @@ const HomeView: React.FC<HomeViewProps> = ({ sections, unlockedSection, onSelect
               disabled={!isUnlocked}
               onClick={() => onSelectSection(section)}
               className={`group relative overflow-hidden p-6 rounded-2xl border-2 text-left transition-all active:scale-95 ${isUnlocked
-                  ? 'border-green-600/30 bg-[#111] hover:border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.05)]'
-                  : 'border-gray-900 bg-gray-900/10 opacity-50'
+                ? 'border-green-600/30 bg-[#111] hover:border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.05)]'
+                : 'border-gray-900 bg-gray-900/10 opacity-50'
                 }`}
             >
               <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none group-hover:opacity-30 transition-opacity">
